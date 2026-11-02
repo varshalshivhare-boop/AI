@@ -1,0 +1,65 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://quantmind.ai/schemas/signal.generated.v1.json",
+  "title": "SignalGeneratedV1",
+  "type": "object",
+  "required": [
+    "signal_id",
+    "symbol",
+    "timestamp",
+    "action",
+    "strategy",
+    "timeframe",
+    "regime",
+    "entry_zone",
+    "stop_loss",
+    "targets",
+    "risk_reward_ratio",
+    "supporting_evidence",
+    "volume_confirmation",
+    "structure_explanation",
+    "invalidation_conditions",
+    "calibrated",
+    "data_mode"
+  ],
+  "properties": {
+    "signal_id": { "type": "string" },
+    "symbol": { "type": "string" },
+    "price": { "type": "number" },
+    "timestamp": { "type": "string", "format": "date-time" },
+    "action": { "type": "string", "enum": ["BUY", "SELL", "NO_TRADE"] },
+    "strategy": { "type": "string" },
+    "timeframe": { "type": "string" },
+    "regime": { "type": "string" },
+    "entry_zone": {
+      "type": "object",
+      "required": ["min", "max"],
+      "properties": {
+        "min": { "type": "number" },
+        "max": { "type": "number" }
+      }
+    },
+    "stop_loss": { "type": "number" },
+    "targets": {
+      "type": "array",
+      "items": { "type": "number" }
+    },
+    "risk_reward_ratio": { "type": "number" },
+    "supporting_evidence": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "volume_confirmation": { "type": "boolean" },
+    "structure_explanation": { "type": "string" },
+    "order_flow_evidence": { "type": "string" },
+    "invalidation_conditions": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "calibrated": { "type": "boolean" },
+    "probability": { "type": "number" },
+    "uncalibrated_score": { "type": "number" },
+    "data_mode": { "type": "string", "enum": ["LIVE", "REPLAY", "DEMO"] },
+    "source_ts": { "type": "string", "format": "date-time" }
+  }
+}

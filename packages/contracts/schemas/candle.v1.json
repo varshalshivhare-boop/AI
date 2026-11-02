@@ -1,0 +1,19 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://quantmind.ai/schemas/candle.v1.json",
+  "title": "CandleV1",
+  "type": "object",
+  "required": ["symbol", "timeframe", "timestamp", "open", "high", "low", "close", "volume", "data_mode"],
+  "properties": {
+    "symbol": { "type": "string" },
+    "timeframe": { "type": "string" },
+    "timestamp": { "type": "string", "format": "date-time" },
+    "open": { "type": "number" },
+    "high": { "type": "number" },
+    "low": { "type": "number" },
+    "close": { "type": "number" },
+    "volume": { "type": "number" },
+    "vwap": { "type": "number" },
+    "data_mode": { "type": "string", "enum": ["LIVE", "REPLAY", "DEMO"] }
+  }
+}

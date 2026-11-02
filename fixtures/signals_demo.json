@@ -1,0 +1,248 @@
+[
+  {
+    "signal_id": "sig-001-brk",
+    "symbol": "NIFTY50",
+    "price": 24360.50,
+    "timestamp": "2026-11-02T05:40:00.000Z",
+    "action": "BUY",
+    "strategy": "Breakout",
+    "timeframe": "5m",
+    "regime": "TRENDING_BULLISH",
+    "entry_zone": { "min": 24348.00, "max": 24368.00 },
+    "stop_loss": 24295.00,
+    "targets": [24440.00, 24512.00, 24580.00],
+    "risk_reward_ratio": 2.35,
+    "supporting_evidence": [
+      "5m close at 24360.50 clears resistance swing-high at 24338 by 22.5 pts (0.7 ATR buffer confirmed)",
+      "Relative volume 2.4x vs same-time-of-day 10-session baseline (not naive daily average)",
+      "Session-anchored VWAP at 24292 — price closing above VWAP for 5 consecutive bars",
+      "ADX expanding: 30.8 → 31.4 → 32.1 over 3 bars confirming directional momentum",
+      "No prior false breakout within last 15 bars at this resistance cluster"
+    ],
+    "volume_confirmation": true,
+    "structure_explanation": "Breakout above 24338 resistance (3-bar swing high confirmed at bar t-3). Price sustained above zone for 2 bars before signal — satisfying 3-bar close-above rule. Support zone at 24295–24310 (ATR-width = 35.2 pts). Market structure: Higher Highs since 09:15 open.",
+    "order_flow_evidence": "Unavailable — trade-level aggressor data not provided by feed. Institutional accumulation NOT inferred.",
+    "invalidation_conditions": [
+      "5m bar close below 24295.00 (stop-loss level, below support zone)",
+      "VWAP cross-under within next 3 bars",
+      "ADX reversal below 27 indicating trend exhaustion"
+    ],
+    "calibrated": false,
+    "uncalibrated_score": 0.81,
+    "data_mode": "DEMO",
+    "source_ts": "2026-11-02T05:40:00.000Z",
+    "fee_breakdown": {
+      "brokerage": 20.00,
+      "stt": 18.50,
+      "exchange_charges": 4.20,
+      "gst": 4.12,
+      "stamp_duty": 1.00,
+      "total_cost": 47.82
+    },
+    "slippage_pts": 1.5,
+    "net_expected_return_pct": 0.31
+  },
+  {
+    "signal_id": "sig-002-fbrk",
+    "symbol": "BANKNIFTY",
+    "price": 52386.00,
+    "timestamp": "2026-11-02T05:45:00.000Z",
+    "action": "SELL",
+    "strategy": "FalseBreakout",
+    "timeframe": "5m",
+    "regime": "RANGING_HIGH_VOL",
+    "entry_zone": { "min": 52370.00, "max": 52400.00 },
+    "stop_loss": 52465.00,
+    "targets": [52220.00, 52100.00],
+    "risk_reward_ratio": 2.12,
+    "supporting_evidence": [
+      "Price breached resistance 52420 at 09:40, closed back inside range within 2 bars — false breakout confirmed",
+      "Volume on breakout bar: 1.4x baseline (insufficient conviction vs 2x threshold)",
+      "RSI(14) at 71.2 at breakout, immediate reversal to 68.5 — momentum failure",
+      "Bollinger Upper Band squeeze: bandwidth < 18th percentile of 20-session range — compression prior to fakeout",
+      "Bid-ask depth ratio 0.84 at time of breakout (ask-side heavier) — weak buyer conviction"
+    ],
+    "volume_confirmation": true,
+    "structure_explanation": "False breakout fade: price exceeded resistance at 52420, lured breakout buyers, then reversed sharply within K=2 bars. Classic bull-trap structure. Resistance zone 52400–52440 now acts as short entry confirmation.",
+    "order_flow_evidence": "Depth ratio 0.84 (asks > bids at breakout bar). Labeled HEURISTIC — not trade-level data. No institutional inference made.",
+    "invalidation_conditions": [
+      "5m close above 52465.00",
+      "Volume expansion above 2x baseline on any bullish bar invalidates the fade thesis"
+    ],
+    "calibrated": false,
+    "uncalibrated_score": 0.74,
+    "data_mode": "DEMO",
+    "source_ts": "2026-11-02T05:45:00.000Z",
+    "fee_breakdown": {
+      "brokerage": 20.00,
+      "stt": 15.20,
+      "exchange_charges": 3.80,
+      "gst": 3.60,
+      "stamp_duty": 0.00,
+      "total_cost": 42.60
+    },
+    "slippage_pts": 2.0,
+    "net_expected_return_pct": 0.28
+  },
+  {
+    "signal_id": "sig-003-trd",
+    "symbol": "RELIANCE",
+    "price": 2948.75,
+    "timestamp": "2026-11-02T06:00:00.000Z",
+    "action": "BUY",
+    "strategy": "TrendContinuation",
+    "timeframe": "5m",
+    "regime": "TRENDING_BULLISH",
+    "entry_zone": { "min": 2942.00, "max": 2952.00 },
+    "stop_loss": 2918.00,
+    "targets": [2985.00, 3012.00],
+    "risk_reward_ratio": 1.98,
+    "supporting_evidence": [
+      "Pullback to session VWAP at 2944.80 from above — first touch after 4-bar breakout",
+      "ADX at 28.4 — trending regime confirmed (threshold: 25); Directional Efficiency Ratio (DER): 0.72",
+      "EMA(9) above EMA(20) above VWAP — all three stacked bullishly",
+      "Volume on pullback bars declining (0.65x, 0.58x) — healthy retracement, not reversal",
+      "MACD histogram positive and expanding: 48.1 on signal bar"
+    ],
+    "volume_confirmation": true,
+    "structure_explanation": "Trend continuation setup on first VWAP pullback within established bullish structure. Higher highs and higher lows maintained throughout session. Entry on VWAP test — lowest-risk position in an active trend.",
+    "order_flow_evidence": "Unavailable — trade-level aggressor data not authorized. No institutional inference.",
+    "invalidation_conditions": [
+      "5m close below VWAP at 2944.80",
+      "ADX drops below 22 within next 4 bars",
+      "Higher low structure violated (close below 2935.00)"
+    ],
+    "calibrated": false,
+    "uncalibrated_score": 0.77,
+    "data_mode": "DEMO",
+    "source_ts": "2026-11-02T06:00:00.000Z",
+    "fee_breakdown": {
+      "brokerage": 20.00,
+      "stt": 7.37,
+      "exchange_charges": 1.84,
+      "gst": 1.96,
+      "stamp_duty": 0.50,
+      "total_cost": 31.67
+    },
+    "slippage_pts": 0.5,
+    "net_expected_return_pct": 0.22
+  },
+  {
+    "signal_id": "sig-004-plb",
+    "symbol": "NIFTY50",
+    "price": 24345.50,
+    "timestamp": "2026-11-02T06:25:00.000Z",
+    "action": "BUY",
+    "strategy": "Pullback",
+    "timeframe": "5m",
+    "regime": "TRENDING_BULLISH",
+    "entry_zone": { "min": 24338.00, "max": 24355.00 },
+    "stop_loss": 24308.00,
+    "targets": [24400.00, 24450.00],
+    "risk_reward_ratio": 1.85,
+    "supporting_evidence": [
+      "Pullback to prior breakout level 24338 (former resistance now flipped support)",
+      "Volume contraction during pullback: 138k vs 235k on breakout bar (41% decline — confirming retracement)",
+      "RSI(14) cooling from overbought 75.3 → 71.2 — healthy digestion, not reversal",
+      "Price held above 9-EMA at 24314 for all pullback bars",
+      "Bollinger Band midline at 24300 providing secondary support"
+    ],
+    "volume_confirmation": true,
+    "structure_explanation": "Pullback to broken resistance, now acting as support. Entry after 3 declining-volume bars. Structure remains bullish with series of higher highs intact above 24200.",
+    "order_flow_evidence": "Unavailable — trade-level data not authorized. Absorption NOT labeled as confirmed.",
+    "invalidation_conditions": [
+      "5m close below 24308.00 (old breakout level, not holding as support)",
+      "Volume expansion on any bearish bar exceeding 1.5x baseline"
+    ],
+    "calibrated": false,
+    "uncalibrated_score": 0.69,
+    "data_mode": "DEMO",
+    "source_ts": "2026-11-02T06:25:00.000Z",
+    "fee_breakdown": {
+      "brokerage": 20.00,
+      "stt": 18.50,
+      "exchange_charges": 4.20,
+      "gst": 4.12,
+      "stamp_duty": 1.00,
+      "total_cost": 47.82
+    },
+    "slippage_pts": 1.5,
+    "net_expected_return_pct": 0.19
+  },
+  {
+    "signal_id": "sig-005-rev",
+    "symbol": "BANKNIFTY",
+    "price": 52445.00,
+    "timestamp": "2026-11-02T07:10:00.000Z",
+    "action": "NO_TRADE",
+    "strategy": "Reversal",
+    "timeframe": "5m",
+    "regime": "UNCERTAIN",
+    "entry_zone": { "min": 52420.00, "max": 52460.00 },
+    "stop_loss": 52510.00,
+    "targets": [52310.00, 52200.00],
+    "risk_reward_ratio": 1.55,
+    "supporting_evidence": [
+      "RSI(14) at 78.5 — elevated but NOT classic double-top divergence pattern yet",
+      "Volume on last 3 bars declining (not yet confirming reversal)",
+      "UNCERTAIN regime: ADX 34.2 (still trending), conflicting with RSI overbought signal"
+    ],
+    "volume_confirmation": false,
+    "structure_explanation": "Potential exhaustion setup but regime is UNCERTAIN — ADX still elevated and no confirmed structural lower-high. Reversal thesis requires lower high + volume spike on bearish bar. INSUFFICIENT EVIDENCE for trade — NO_TRADE issued.",
+    "order_flow_evidence": "Unavailable.",
+    "invalidation_conditions": [
+      "New high formed above 52490 — reversal thesis negated",
+      "Volume expansion on bullish bar negates exhaustion thesis"
+    ],
+    "calibrated": false,
+    "uncalibrated_score": 0.38,
+    "data_mode": "DEMO",
+    "source_ts": "2026-11-02T07:10:00.000Z",
+    "fee_breakdown": null,
+    "slippage_pts": 0,
+    "net_expected_return_pct": 0
+  },
+  {
+    "signal_id": "sig-006-vol",
+    "symbol": "NIFTY50",
+    "price": 24498.75,
+    "timestamp": "2026-11-02T07:45:00.000Z",
+    "action": "BUY",
+    "strategy": "VolumeExpansion",
+    "timeframe": "5m",
+    "regime": "TRENDING_BULLISH_HIGH_VOL",
+    "entry_zone": { "min": 24488.00, "max": 24508.00 },
+    "stop_loss": 24448.00,
+    "targets": [24565.00, 24630.00],
+    "risk_reward_ratio": 2.18,
+    "supporting_evidence": [
+      "Volume spike 225k — 2.8x same-time-of-day 10-session baseline (U-shape adjusted): Z-score 2.42",
+      "Realized volatility percentile: 82nd — high-volatility regime confirmed",
+      "Volume acceleration: 3-bar acceleration ratio 1.62 (volume building, not decaying)",
+      "Price closed above Point of Control (POC) at 24462 — value area acceptance",
+      "VAH (Value Area High at 24480) breached and sustained — upward auction confirmed"
+    ],
+    "volume_confirmation": true,
+    "structure_explanation": "Volume expansion breakout with statistically significant z-score (2.42). POC-anchored acceptance above 24462 provides structural credibility. Session volume profile shows price moving away from value area — directional commitment by market participants.",
+    "order_flow_evidence": "Unavailable — bid-ask depth ratio 1.18 (bids > asks) at signal bar (HEURISTIC, not trade-level data). Not labelled as institutional activity.",
+    "invalidation_conditions": [
+      "5m close back inside Value Area (below 24462)",
+      "Volume Z-score drop below 1.5 on next bar — expansion thesis fails",
+      "ADX reversal below 33"
+    ],
+    "calibrated": false,
+    "uncalibrated_score": 0.83,
+    "data_mode": "DEMO",
+    "source_ts": "2026-11-02T07:45:00.000Z",
+    "fee_breakdown": {
+      "brokerage": 20.00,
+      "stt": 18.50,
+      "exchange_charges": 4.20,
+      "gst": 4.12,
+      "stamp_duty": 1.00,
+      "total_cost": 47.82
+    },
+    "slippage_pts": 1.5,
+    "net_expected_return_pct": 0.34
+  }
+]

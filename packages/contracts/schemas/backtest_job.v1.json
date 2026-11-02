@@ -1,0 +1,72 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://quantmind.ai/schemas/backtest_job.v1.json",
+  "title": "BacktestJobV1",
+  "type": "object",
+  "required": [
+    "job_id",
+    "symbol",
+    "strategy",
+    "timeframe",
+    "start_date",
+    "end_date",
+    "parameters",
+    "status",
+    "data_mode"
+  ],
+  "properties": {
+    "job_id": { "type": "string" },
+    "symbol": { "type": "string" },
+    "strategy": { "type": "string" },
+    "timeframe": { "type": "string" },
+    "start_date": { "type": "string", "format": "date-time" },
+    "end_date": { "type": "string", "format": "date-time" },
+    "parameters": { "type": "object" },
+    "status": { "type": "string", "enum": ["QUEUED", "RUNNING", "COMPLETED", "FAILED"] },
+    "data_mode": { "type": "string", "enum": ["LIVE", "REPLAY", "DEMO"] },
+    "results": {
+      "type": "object",
+      "properties": {
+        "in_sample": {
+          "type": "object",
+          "properties": {
+            "win_rate": { "type": "number" },
+            "profit_factor": { "type": "number" },
+            "sharpe": { "type": "number" },
+            "sortino": { "type": "number" },
+            "max_drawdown": { "type": "number" },
+            "total_return": { "type": "number" },
+            "total_trades": { "type": "number" }
+          }
+        },
+        "out_of_sample": {
+          "type": "object",
+          "properties": {
+            "win_rate": { "type": "number" },
+            "profit_factor": { "type": "number" },
+            "sharpe": { "type": "number" },
+            "sortino": { "type": "number" },
+            "max_drawdown": { "type": "number" },
+            "total_return": { "type": "number" },
+            "total_trades": { "type": "number" }
+          }
+        },
+        "equity_curve": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "timestamp": { "type": "string" },
+              "equity": { "type": "number" },
+              "drawdown": { "type": "number" }
+            }
+          }
+        },
+        "trades": {
+          "type": "array",
+          "items": { "type": "object" }
+        }
+      }
+    }
+  }
+}

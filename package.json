@@ -1,0 +1,16 @@
+{
+  "name": "quantmind-ai",
+  "version": "0.1.0",
+  "description": "QuantMind AI — NSE intraday analysis and paper-trading research platform",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "test:integration": "node scripts/run-integration.ts",
+    "mock:api": "cd apps/api && node src/mock-server.ts",
+    "dev:web": "cd apps/web && npm run dev",
+    "verify": "node scripts/run-integration.ts"
+  },
+  "engines": {
+    "node": ">=20.0.0"
+  }
+}

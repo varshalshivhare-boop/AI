@@ -1,46 +1,59 @@
-# Database Schema
+# QuantMind AI — Database Schema
 
-Migration `0001_init.sql` creates `instruments`, `candles` and `signals`. Migrations are recorded in `schema_migrations` with a SHA-256 checksum. An applied migration that is later edited causes the runner to fail. Write a new migration instead.
+```sql
+-- Instruments
+CREATE TABLE instruments (
+    symbol VARCHAR(32) PRIMARY KEY,
+    name VARCHAR(255) NOT NULL,
+    exchange VARCHAR(16) DEFAULT 'NSE',
+    tick_size DECIMAL(10, 2) DEFAULT 0.05,
+    lot_size INT DEFAULT 1,
+    is_active BOOLEAN DEFAULT TRUE
+);
 
-## Conventions
+-- Backtest jobs (owned by quant-engine / api)
+CREATE TABLE backtest_jobs (
+    id UUID PRIMARY KEY,
+    symbol VARCHAR(32) NOT NULL,
+    strategy VARCHAR(64) NOT NULL,
+    timeframe VARCHAR(16) NOT NULL,
+    start_date TIMESTAMP WITH TIME ZONE NOT NULL,
+    end_date TIMESTAMP WITH TIME ZONE NOT NULL,
+    parameters JSONB NOT NULL,
+    status VARCHAR(32) NOT NULL DEFAULT 'QUEUED', -- QUEUED, RUNNING, COMPLETED, FAILED
+    results JSONB,
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
+    updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+);
 
-- Timestamps: `TIMESTAMPTZ`, stored in UTC.
-- Prices: `NUMERIC(14,4)`. Volumes: `BIGINT`.
-- Every table has `schema_version SMALLINT NOT NULL DEFAULT 1`.
-- `data_mode` is constrained to `LIVE | REPLAY | DEMO | HISTORICAL`.
-- Enumerations are `TEXT` with `CHECK` constraints, so adding a value is a migration, not a type change.
+-- Simulated Paper Trades
+CREATE TABLE simulated_trades (
+    id UUID PRIMARY KEY,
+    user_id UUID NOT NULL,
+    symbol VARCHAR(32) NOT NULL,
+    strategy VARCHAR(64) NOT NULL,
+    timeframe VARCHAR(16) NOT NULL,
+    action VARCHAR(16) NOT NULL, -- BUY, SELL
+    quantity INT NOT NULL,
+    entry_price DECIMAL(12, 2) NOT NULL,
+    exit_price DECIMAL(12, 2),
+    pnl DECIMAL(12, 2),
+    slippage DECIMAL(10, 4) DEFAULT 0.0,
+    brokerage_fees DECIMAL(10, 2) DEFAULT 0.0,
+    status VARCHAR(16) NOT NULL, -- OPEN, CLOSED
+    paper_flag BOOLEAN DEFAULT TRUE NOT NULL, -- ALWAYS TRUE
+    entry_time TIMESTAMP WITH TIME ZONE NOT NULL,
+    exit_time TIMESTAMP WITH TIME ZONE
+);
 
-## instruments
-
-| Column | Type | Notes |
-|---|---|---|
-| instrument_id | BIGSERIAL PK | |
-| exchange, segment, symbol | TEXT, unique together | Only `NSE` and `CASH_EQUITY` allowed in v1 |
-| isin | TEXT | Format-checked when present |
-| tick_size, lot_size | NUMERIC, INT | Used by the risk engine |
-| is_active | BOOLEAN | Watchlist removal sets false, never deletes |
-
-## candles
-
-- Primary key `(instrument_id, timeframe, ts)`. The key includes `ts`, which TimescaleDB requires for a hypertable's unique constraints.
-- Hypertable on `ts`, 7-day chunks.
-- CHECKs: `high >= low`, `high >= open and close`, `low <= open and close`, all prices > 0, `volume >= 0`, `NOT is_missing OR volume = 0`.
-- `is_final` distinguishes closed bars from open ones. Only closed bars are persisted by the pipeline.
-- `is_missing` marks gaps. Gap bars carry no interpolated prices.
-
-Expected volume: about 1,875 bars per symbol per 5 sessions at 1m. The 1m table grows linearly with the watchlist. Compress chunks older than 30 days in a later migration.
-
-## signals
-
-- `action` in `BUY | SELL | NO_TRADE`.
-- CHECK `signals_trade_plan_complete`: BUY and SELL must have entry zone, stop and target 1, with `entry_low <= entry_high`.
-- CHECK `signals_no_trade_reason`: NO_TRADE must have `reason_code`.
-- CHECK `signals_calibrated_requires_probability`: a calibrated signal must carry a probability.
-- `status` follows GENERATED, DELIVERED, INVALIDATED, EXPIRED, CLOSED. Transitions are enforced in the application and logged.
-- `evidence` and `invalidation_conditions` are JSONB, mirroring the contract.
-
-## Tables planned for later migrations
-
-Owned by the phase that introduces them: `backtest_runs`, `backtest_jobs`, `simulated_trades` (PC 2), `model_versions` (PC 2), `signal_evidence` (PC 2), `alert_history` (PC 3), `users` and `refresh_tokens` (PC 3), `system_health` (PC 1), `market_regimes` (PC 2), `strategy_configs` (PC 2).
-
-Raw ticks are not in the schema. Tick persistence is an optional table decided in Milestone 1.6 after the licence review in `DATA_PROVIDER.md`.
+-- Alert History
+CREATE TABLE alert_history (
+    id UUID PRIMARY KEY,
+    signal_id VARCHAR(64) NOT NULL,
+    symbol VARCHAR(32) NOT NULL,
+    channel VARCHAR(32) NOT NULL, -- WEBSOCKET, TELEGRAM
+    status VARCHAR(32) NOT NULL, -- GENERATED, DELIVERED, INVALIDATED, EXPIRED, CLOSED
+    payload JSONB NOT NULL,
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+);
+```
