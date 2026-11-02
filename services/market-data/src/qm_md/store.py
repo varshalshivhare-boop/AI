@@ -63,30 +63,37 @@ ON CONFLICT (instrument_id, timeframe, ts) DO UPDATE SET
 """
 
 
+async def instrument_id_for(
+    conn: asyncpg.Connection,
+    cache: dict[tuple[str, str], int],
+    symbol: str,
+    exchange: str,
+) -> int:
+    """Return instruments.instrument_id, creating the row on first use."""
+    key = (exchange, symbol)
+    cached = cache.get(key)
+    if cached is not None:
+        return cached
+    value = await conn.fetchval(
+        """
+        INSERT INTO instruments (exchange, segment, symbol)
+        VALUES ($1, 'CASH_EQUITY', $2)
+        ON CONFLICT (exchange, segment, symbol)
+        DO UPDATE SET updated_at = instruments.updated_at
+        RETURNING instrument_id
+        """,
+        exchange,
+        symbol,
+    )
+    instrument_id = int(value)
+    cache[key] = instrument_id
+    return instrument_id
+
+
 class PostgresCandleStore:
     def __init__(self, pool: asyncpg.Pool) -> None:
         self._pool = pool
         self._instrument_ids: dict[tuple[str, str], int] = {}
-
-    async def _instrument_id(self, conn: asyncpg.Connection, symbol: str, exchange: str) -> int:
-        key = (exchange, symbol)
-        cached = self._instrument_ids.get(key)
-        if cached is not None:
-            return cached
-        value = await conn.fetchval(
-            """
-            INSERT INTO instruments (exchange, segment, symbol)
-            VALUES ($1, 'CASH_EQUITY', $2)
-            ON CONFLICT (exchange, segment, symbol)
-            DO UPDATE SET updated_at = instruments.updated_at
-            RETURNING instrument_id
-            """,
-            exchange,
-            symbol,
-        )
-        instrument_id = int(value)
-        self._instrument_ids[key] = instrument_id
-        return instrument_id
 
     async def upsert_many(self, candles: Sequence[Candle]) -> int:
         _check_final(candles)
@@ -96,7 +103,9 @@ class PostgresCandleStore:
             async with self._pool.acquire() as conn, conn.transaction():
                 rows = []
                 for c in candles:
-                    instrument_id = await self._instrument_id(conn, c.symbol, c.exchange)
+                    instrument_id = await instrument_id_for(
+                        conn, self._instrument_ids, c.symbol, c.exchange
+                    )
                     rows.append((
                         c.bar_start_ts, instrument_id, c.timeframe.value, c.open, c.high,
                         c.low, c.close, c.volume, c.tick_count, c.is_final, c.is_missing,

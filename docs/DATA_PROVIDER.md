@@ -28,7 +28,17 @@ Credentials come only from environment variables (see `.env.example`). If `MARKE
 - During a regular session, no tick for `STALE_DATA_THRESHOLD_SECONDS` moves the provider to `DEGRADED` and publishes `provider.health`. Signals are blocked until the feed recovers.
 - Reconnects use exponential backoff with jitter, capped at `PROVIDER_RECONNECT_MAX_BACKOFF_SECONDS`, and resubscribe to the watchlist.
 
-## Tick persistence: status and implications
+## Tick persistence: status (Phase 2)
+
+- Implemented: `ticks` table (migration 0003, 7-day retention policy), batched writer (`ticks.py`), flag-gated startup.
+- To enable, BOTH `TICK_PERSISTENCE_ENABLED=true` AND `TICK_LICENCE_CONFIRMED=true` are required. The service refuses to start with only the first.
+- Licence confirmation record (fill in before enabling anywhere):
+  - Confirmed by: ______________________ (owner: TODO, business decision)
+  - Date: ______________________
+  - Provider terms reference: ______________________
+- Limitation: ticks without a provider sequence are refused (`ValueError`). The `ticks` primary key includes `provider_sequence`. Confirm that the Upstox feed supplies one before enabling live persistence.
+
+## Tick persistence: status and implications (Phase 1 notes)
 
 Status (Milestone 1.6):
 

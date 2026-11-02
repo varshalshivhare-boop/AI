@@ -9,6 +9,7 @@ from __future__ import annotations
 
 import json
 import logging
+from datetime import datetime, timedelta
 from typing import Any
 
 from redis.exceptions import RedisError
@@ -21,6 +22,11 @@ logger = logging.getLogger("qm_md.publish")
 
 TICKS_STREAM = "ticks.normalized"
 HEALTH_STREAM = "provider.health"
+OPEN_CANDLE_MAXLEN = 1000
+
+
+def open_candle_stream(timeframe: str) -> str:
+    return f"candles.open.{timeframe}"
 
 
 def candle_stream(timeframe: str) -> str:
@@ -72,5 +78,36 @@ class RedisPublisher:
             candle_stream(candle.timeframe.value), candle_payload(candle), self._candles_maxlen
         )
 
+    async def publish_open_candle(self, candle: Candle) -> bool:
+        """Live-view stream. Never used for persistence; consumers must treat it as provisional."""
+        if candle.is_final:
+            raise ValueError("publish_open_candle received a final candle")
+        return await self._xadd(
+            open_candle_stream(candle.timeframe.value),
+            candle_payload(candle),
+            OPEN_CANDLE_MAXLEN,
+        )
+
     async def publish_health(self, payload: dict[str, Any]) -> bool:
         return await self._xadd(HEALTH_STREAM, payload, self._maxlen[HEALTH_STREAM])
+
+
+class OpenCandleThrottle:
+    """Allows at most one open-candle publish per (symbol, timeframe, bar) per interval."""
+
+    def __init__(self, interval: timedelta) -> None:
+        if interval <= timedelta(0):
+            raise ValueError("interval must be positive")
+        self._interval = interval
+        self._last: dict[tuple[str, str, datetime], datetime] = {}
+
+    def allow(self, candle: Candle, now: datetime) -> bool:
+        key = (candle.symbol, candle.timeframe.value, candle.bar_start_ts)
+        last = self._last.get(key)
+        if last is not None and now - last < self._interval:
+            return False
+        self._last[key] = now
+        if len(self._last) > 10_000:
+            cutoff = now - timedelta(days=1)
+            self._last = {k: v for k, v in self._last.items() if v >= cutoff}
+        return True

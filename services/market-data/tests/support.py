@@ -57,6 +57,8 @@ async def run_replay(
     provider: object | None = None,
     metrics: object | None = None,
     publish_ticks: bool = True,
+    clock: object | None = None,
+    **pipeline_kwargs: object,
 ) -> object:
     """Run the real pipeline over fixtures. Returns (summary, store, metrics)."""
     from datetime import datetime as _dt
@@ -85,9 +87,10 @@ async def run_replay(
         builders=[CandleBuilder(Timeframe(tf), cal) for tf in timeframes],
         store=st,  # type: ignore[arg-type]
         metrics=m,  # type: ignore[arg-type]
-        clock=lambda: _dt.now(UTC),
+        clock=clock if clock is not None else (lambda: _dt.now(UTC)),  # type: ignore[arg-type]
         publisher=publisher,  # type: ignore[arg-type]
         publish_ticks=publish_ticks,
+        **pipeline_kwargs,  # type: ignore[arg-type]
     )
     summary = await pipeline.run()
     return summary, st, m

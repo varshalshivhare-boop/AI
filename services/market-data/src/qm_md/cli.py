@@ -18,6 +18,7 @@ from pathlib import Path
 
 from .candles import CandleBuilder
 from .dedupe import LruDeduper
+from .errors import ConfigurationError
 from .golden import write_candles_csv
 from .logging_setup import setup_logging
 from .metrics import MarketDataMetrics
@@ -48,6 +49,7 @@ def _parse_args(argv: list[str]) -> argparse.Namespace:
     replay.add_argument("--database-url", default=os.environ.get("DATABASE_URL"))
     replay.add_argument("--output-dir", type=Path, default=None)
     replay.add_argument("--log-level", default=os.environ.get("LOG_LEVEL", "INFO"))
+    sub.add_parser("serve", help="run the pipeline and HTTP endpoints; configured by environment")
     return parser.parse_args(argv)
 
 
@@ -110,6 +112,19 @@ async def _replay(args: argparse.Namespace) -> int:
 
 def main(argv: list[str] | None = None) -> int:
     args = _parse_args(sys.argv[1:] if argv is None else argv)
+    if args.command == "serve":
+        from .serve import EXIT_FAILED, serve_main
+        from .settings import load_settings
+
+        env = dict(os.environ)
+        try:
+            settings = load_settings(env)
+        except ConfigurationError as exc:
+            setup_logging("ERROR")
+            logger.error("configuration error: %s", exc, extra={"event": "config_error"})
+            return EXIT_FAILED
+        setup_logging(settings.log_level)
+        return serve_main(settings, env)
     setup_logging(args.log_level)
     if args.command == "replay":
         return asyncio.run(_replay(args))
