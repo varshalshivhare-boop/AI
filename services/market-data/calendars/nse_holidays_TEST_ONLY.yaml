@@ -1,0 +1,8 @@
+# TEST CALENDAR. NOT an NSE holiday list. Do not use in production.
+# Loads only with --allow-test-calendar. It lists no holidays, which is an assumption,
+# not a verified fact. For 2026-10-19 to 2026-10-23, confirm against the NSE circular.
+calendar_version: TEST-ONLY-NO-HOLIDAYS-VERIFY
+status: POPULATED
+year: 2026
+source: "test fixture: no holidays assumed for the synthetic window"
+holidays: []

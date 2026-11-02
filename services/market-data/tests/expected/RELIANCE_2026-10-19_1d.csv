@@ -1,0 +1,2 @@
+symbol,timeframe,session_date,bar_start_ts,bar_end_ts,open,high,low,close,volume,tick_count,is_final
+RELIANCE,1d,2026-10-19,2026-10-19T03:45:00+00:00,2026-10-19T10:00:00+00:00,1381.7500,1416.7000,1380.8000,1410.8000,13765579,1500,true

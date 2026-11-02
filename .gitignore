@@ -31,3 +31,7 @@ redisdata/
 .idea/
 .vscode/
 *.swp
+
+# market-data local artifacts
+.coverage
+services/market-data/.venv/

@@ -28,6 +28,20 @@ Credentials come only from environment variables (see `.env.example`). If `MARKE
 - During a regular session, no tick for `STALE_DATA_THRESHOLD_SECONDS` moves the provider to `DEGRADED` and publishes `provider.health`. Signals are blocked until the feed recovers.
 - Reconnects use exponential backoff with jitter, capped at `PROVIDER_RECONNECT_MAX_BACKOFF_SECONDS`, and resubscribe to the watchlist.
 
+## Tick persistence: status and implications
+
+Status (Milestone 1.6):
+
+- Normalized ticks are published to the `ticks.normalized` Redis Stream with approximate MAXLEN trimming (`TICKS_STREAM_MAXLEN`). This is the only tick sink implemented.
+- Raw ticks are **not** written to TimescaleDB. The `TICK_PERSISTENCE_ENABLED` variable in `.env.example` has no effect yet: no tick writer exists, and the flag is reserved until the licence questions below are answered.
+- Retention for the Redis stream is by length only (MAXLEN), not by time. Redis is not a store of record.
+
+Implications when persistence is added:
+
+- Volume: a 500-symbol watchlist at roughly 1 tick per second per symbol during a 375-minute session is on the order of 10^8 rows per year. Compression and a retention policy are required before enabling it.
+- Licence: storing raw ticks may be restricted by the provider's terms, independently of displaying them.
+- Retention must be set explicitly (`TICK_RETENTION_DAYS`) and enforced with a TimescaleDB retention policy in a migration, not by a cron job.
+
 ## Licensing, retention and terms
 
 Before enabling tick persistence (`TICK_PERSISTENCE_ENABLED`), confirm all of the following against the provider's current terms:
