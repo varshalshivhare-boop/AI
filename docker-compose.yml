@@ -7,68 +7,21 @@ services:
     ports:
       - "6379:6379"
     command: ["redis-server", "--appendonly", "yes"]
+    restart: unless-stopped
 
   postgres:
-    image: postgres:16-alpine
+    image: timescale/timescaledb:latest-pg16
     container_name: quantmind-postgres
     environment:
       POSTGRES_USER: quantmind
-      POSTGRES_PASSWORD: quantmind_secret
+      POSTGRES_PASSWORD: 80c34de091b01dcd4c9208f1e4fae516
       POSTGRES_DB: quantmind
     ports:
       - "5432:5432"
     volumes:
+      - quantmind_pgdata:/var/lib/postgresql/data
       - ./docker/init.sql:/docker-entrypoint-initdb.d/init.sql
+    restart: unless-stopped
 
-  market-data:
-    build:
-      context: ./services/market-data
-    container_name: quantmind-market-data-pc1
-    environment:
-      REDIS_HOST: redis
-      DATABASE_URL: postgresql://quantmind:quantmind_secret@postgres:5432/quantmind
-      DATA_MODE: REPLAY
-      REPLAY_SPEED: 10
-    depends_on:
-      - redis
-      - postgres
-
-  quant-engine:
-    build:
-      context: ./services/quant-engine
-    container_name: quantmind-quant-engine-pc2
-    environment:
-      REDIS_HOST: redis
-      DATABASE_URL: postgresql://quantmind:quantmind_secret@postgres:5432/quantmind
-      DATA_MODE: REPLAY
-    depends_on:
-      - redis
-      - postgres
-
-  api:
-    build:
-      context: ./apps/api
-    container_name: quantmind-api-pc3
-    ports:
-      - "4000:4000"
-    environment:
-      PORT: 4000
-      REDIS_HOST: redis
-      DATABASE_URL: postgresql://quantmind:quantmind_secret@postgres:5432/quantmind
-      DATA_MODE: REPLAY
-    depends_on:
-      - redis
-      - postgres
-
-  web:
-    build:
-      context: ./apps/web
-    container_name: quantmind-web
-    ports:
-      - "3000:3000"
-    environment:
-      NEXT_PUBLIC_API_URL: http://localhost:4000
-      NEXT_PUBLIC_WS_URL: ws://localhost:4000/gateway
-      NEXT_PUBLIC_DATA_MODE: REPLAY
-    depends_on:
-      - api
+volumes:
+  quantmind_pgdata:
