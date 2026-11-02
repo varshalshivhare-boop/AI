@@ -6,10 +6,10 @@ from datetime import timedelta
 
 import asyncpg
 import pytest
+from support import DAY, ist, run_replay, tick
 
-from qm_md.ticks import TickWriter
-from support import DAY, run_replay, tick, ist
 from qm_md.errors import StorageError
+from qm_md.ticks import TickWriter
 
 pytestmark = pytest.mark.integration
 URL = os.environ.get("TEST_DATABASE_URL")

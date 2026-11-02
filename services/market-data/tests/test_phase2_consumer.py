@@ -3,6 +3,7 @@
 Valid candles are ACKed. A malformed payload is moved to dlq.candles.closed.1m with the error.
 """
 
+import contextlib
 import json
 
 import pytest
@@ -11,10 +12,10 @@ import redis.asyncio as aioredis
 from jsonschema import Draft202012Validator, FormatChecker
 from redis.backoff import NoBackoff
 from redis.retry import Retry
+from support import CONTRACTS, DAY, run_replay
 
 from qm_md.metrics import MarketDataMetrics
 from qm_md.publish import RedisPublisher
-from support import CONTRACTS, DAY, run_replay
 
 pytestmark = pytest.mark.integration
 
@@ -39,7 +40,7 @@ def reference_consumer(sync: redis.Redis) -> dict[str, int]:
                 raw = fields[b"payload"].decode()
                 try:
                     schema.validate(json.loads(raw))
-                except Exception as exc:  # noqa: BLE001 - every failure goes to the DLQ
+                except Exception as exc:
                     sync.xadd(DLQ, {"payload": raw, "error": str(exc)[:500],
                                     "source_id": entry_id})
                     dead += 1
@@ -52,10 +53,8 @@ def reference_consumer(sync: redis.Redis) -> dict[str, int]:
 async def test_valid_candles_are_acked_and_malformed_ones_dead_lettered(redis_server) -> None:  # type: ignore[no-untyped-def]
     sync = redis.Redis.from_url(redis_server.url, decode_responses=False)
     sync.flushall()
-    try:
+    with contextlib.suppress(redis.ResponseError):  # group already exists
         sync.xgroup_create(STREAM, GROUP, id="0", mkstream=True)
-    except redis.ResponseError:
-        pass
 
     client = aioredis.Redis.from_url(redis_server.url, socket_connect_timeout=0.5,
                                      retry=Retry(NoBackoff(), 0))

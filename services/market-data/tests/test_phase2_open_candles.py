@@ -2,15 +2,16 @@
 
 from datetime import UTC, datetime, timedelta
 
-from qm_md.publish import OpenCandleThrottle
-from support import DAY, run_replay, ist
 from phase2_support import RecordingPublisher
+from support import DAY, ist, run_replay
+
+from qm_md.publish import OpenCandleThrottle
 
 
 async def test_open_candles_never_reach_the_store_or_closed_channel() -> None:
     publisher = RecordingPublisher()
     fixed = datetime(2026, 10, 19, 4, 0, tzinfo=UTC)
-    summary, store, _ = await run_replay(
+    _summary, store, _ = await run_replay(
         ("RELIANCE",), dates=(DAY,), timeframes=("1m", "5m"), publisher=publisher,
         clock=lambda: fixed,
         open_candle_throttle=OpenCandleThrottle(timedelta(seconds=1)),
@@ -36,11 +37,10 @@ async def test_throttle_allows_one_open_publish_per_bar_per_interval() -> None:
 
 
 def test_throttle_reopens_after_interval() -> None:
-    from support import tick
+    from support import calendar, tick
 
-    from qm_md.models import Timeframe
     from qm_md.candles import CandleBuilder
-    from support import calendar
+    from qm_md.models import Timeframe
 
     b = CandleBuilder(Timeframe.M1, calendar())
     b.add(tick(ist(2026, 10, 19, 9, 15, 5), "100", 1))

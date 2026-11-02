@@ -3,6 +3,9 @@
 from collections.abc import AsyncIterator
 from datetime import UTC, datetime
 
+from phase2_support import RecordingPublisher
+from support import DAY, FIXTURES, calendar
+
 from qm_md.candles import CandleBuilder
 from qm_md.dedupe import LruDeduper
 from qm_md.metrics import MarketDataMetrics
@@ -11,8 +14,6 @@ from qm_md.normalize import TickNormalizer
 from qm_md.pipeline import MarketDataPipeline
 from qm_md.providers.replay import ReplayProvider
 from qm_md.store import InMemoryCandleStore
-from support import DAY, FIXTURES, calendar
-from phase2_support import RecordingPublisher
 
 
 class StopAfter(ReplayProvider):
