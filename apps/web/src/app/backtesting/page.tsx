@@ -191,7 +191,7 @@ export default function BacktestingPage() {
           {STATUS_ICONS[job?.status as string ?? 'QUEUED']}
           <span className="text-zinc-400">Job: <span className="text-zinc-200">{jobId}</span></span>
           <span className={STATUS_LABEL_STYLES[job?.status as string ?? 'QUEUED'] ?? 'text-zinc-400'}>
-            {job?.status ?? 'QUEUED'}
+            {String(job?.status ?? 'QUEUED')}
           </span>
           {job?.config_hash && (
             <span className="text-zinc-700 font-mono text-[10px]" title="Configuration hash for reproducibility">

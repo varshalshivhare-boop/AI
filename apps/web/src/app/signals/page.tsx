@@ -114,7 +114,7 @@ export default function SignalsPage() {
                 >
                   <div className="flex items-center gap-3 flex-wrap">
                     <span className="font-bold text-sm text-zinc-100 tabular-nums">{sig.symbol as string}</span>
-                    <SignalBadge action={sig.action as string} size="md" />
+                    <SignalBadge action={sig.action as 'BUY' | 'SELL' | 'NO_TRADE'} size="md" />
                     <span className="text-[10px] text-zinc-600 font-mono px-1.5 py-0.5 bg-zinc-900 rounded border border-zinc-800">
                       {sig.strategy as string} · {sig.timeframe as string}
                     </span>
