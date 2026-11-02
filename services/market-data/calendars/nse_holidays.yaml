@@ -1,0 +1,13 @@
+# NSE trading holidays, versioned data file (owned by PC 1).
+#
+# STATUS: UNPOPULATED PLACEHOLDER. Do not run live or replay sessions against
+# this file until it is filled from the official NSE holiday circular for the year.
+# The loader must reject this file when `status` is UNPOPULATED.
+calendar_version: UNPOPULATED
+status: UNPOPULATED
+year: 2026
+source: "TODO: cite the NSE circular number and date"
+holidays: []
+# Entries take this form:
+#   - date: 2026-01-26
+#     name: Republic Day

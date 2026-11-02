@@ -1,0 +1,30 @@
+{
+  "schema_version": 1,
+  "signal_id": "9a0c5e7d-2b1f-4c3e-8d6a-1f4b7e9c2d50",
+  "symbol": "INFY",
+  "exchange": "NSE",
+  "action": "NO_TRADE",
+  "price": "1598.2500",
+  "signal_ts": "2026-10-19T05:15:00Z",
+  "expires_at": "2026-10-19T05:45:00Z",
+  "strategy": "PULLBACK",
+  "timeframe": "15m",
+  "regime": { "trend": "UNCERTAIN", "volatility": "NORMAL", "pressure": "UNCERTAIN" },
+  "probability": null,
+  "calibrated": false,
+  "volume_confirmation": "NOT_CONFIRMED",
+  "order_flow": { "status": "UNAVAILABLE", "evidence": [] },
+  "structure_explanation": "Trend and pressure signals conflict; no pullback to a confirmed support zone.",
+  "evidence": [
+    { "code": "REGIME_CONFLICT", "source": "REGIME", "description": "ADX below threshold while VWAP position is bullish.", "value": null }
+  ],
+  "invalidation_conditions": ["Re-evaluated on next 15m close"],
+  "entry_zone": null,
+  "stop_loss": null,
+  "targets": null,
+  "risk_reward": null,
+  "reason_code": "REGIME_UNCERTAIN",
+  "provider_ts": "2026-10-19T05:15:00Z",
+  "ingest_ts": "2026-10-19T05:15:00.180000Z",
+  "data_mode": "REPLAY"
+}

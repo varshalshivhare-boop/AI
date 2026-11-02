@@ -1,0 +1,25 @@
+# Prometheus scrape configuration.
+# Service targets are added by their owners when the services exist.
+global:
+  scrape_interval: 15s
+  evaluation_interval: 15s
+
+scrape_configs:
+  - job_name: prometheus
+    static_configs:
+      - targets: ["localhost:9090"]
+
+  # PC 1 - market-data service (metrics endpoint added in Milestone 1.7)
+  # - job_name: market-data
+  #   static_configs:
+  #     - targets: ["host.docker.internal:8001"]
+
+  # PC 2 - quant-engine (add when metrics endpoint exists)
+  # - job_name: quant-engine
+  #   static_configs:
+  #     - targets: ["host.docker.internal:8002"]
+
+  # PC 3 - api (add when metrics endpoint exists)
+  # - job_name: api
+  #   static_configs:
+  #     - targets: ["host.docker.internal:3000"]

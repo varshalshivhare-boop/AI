@@ -1,0 +1,17 @@
+{
+  "schema_version": 1,
+  "symbol": "RELIANCE",
+  "exchange": "NSE",
+  "price": "1412.5000",
+  "quantity": 25,
+  "cumulative_volume": 1843200,
+  "bid_price": "1412.45",
+  "ask_price": "1412.50",
+  "bid_quantity": 310,
+  "ask_quantity": 145,
+  "provider": "REPLAY",
+  "provider_sequence": 88412,
+  "provider_ts": "2026-10-19T04:45:12.350000Z",
+  "ingest_ts": "2026-10-19T04:45:12.402000Z",
+  "data_mode": "REPLAY"
+}

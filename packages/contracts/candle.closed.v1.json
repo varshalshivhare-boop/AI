@@ -1,0 +1,49 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://quantmind.dev/contracts/candle.closed.v1.json",
+  "title": "candle.closed.v1",
+  "description": "A finalized OHLCV candle. One schema for all timeframes; timeframe is a field. Published to candles.closed.<timeframe>. Frozen at v1.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version", "symbol", "exchange", "timeframe", "session_date",
+    "bar_start_ts", "bar_end_ts", "open", "high", "low", "close", "volume",
+    "tick_count", "is_final", "is_missing", "provider_ts", "ingest_ts", "data_mode"
+  ],
+  "properties": {
+    "schema_version": { "const": 1 },
+    "symbol": { "type": "string", "minLength": 1, "maxLength": 32 },
+    "exchange": { "enum": ["NSE", "BSE"] },
+    "timeframe": { "enum": ["1m", "5m", "15m", "30m", "1d"] },
+    "session_date": {
+      "type": "string",
+      "format": "date",
+      "description": "IST trading session date this candle belongs to."
+    },
+    "bar_start_ts": { "type": "string", "format": "date-time" },
+    "bar_end_ts": { "type": "string", "format": "date-time" },
+    "open": { "type": "string", "pattern": "^[0-9]+(\\.[0-9]{1,4})?$" },
+    "high": { "type": "string", "pattern": "^[0-9]+(\\.[0-9]{1,4})?$" },
+    "low": { "type": "string", "pattern": "^[0-9]+(\\.[0-9]{1,4})?$" },
+    "close": { "type": "string", "pattern": "^[0-9]+(\\.[0-9]{1,4})?$" },
+    "volume": { "type": "integer", "minimum": 0 },
+    "tick_count": { "type": "integer", "minimum": 0 },
+    "is_final": {
+      "const": true,
+      "description": "Only final candles are published on candles.closed.*. Open candles use a separate, non-persistent channel."
+    },
+    "is_missing": {
+      "type": "boolean",
+      "description": "True for a gap bar. Gap bars carry no prices and are never interpolated."
+    },
+    "provider_ts": { "type": ["string", "null"], "format": "date-time" },
+    "ingest_ts": { "type": "string", "format": "date-time" },
+    "data_mode": { "enum": ["LIVE", "REPLAY", "DEMO", "HISTORICAL"] }
+  },
+  "allOf": [
+    {
+      "if": { "properties": { "is_missing": { "const": true } }, "required": ["is_missing"] },
+      "then": { "properties": { "volume": { "const": 0 }, "tick_count": { "const": 0 } } }
+    }
+  ]
+}

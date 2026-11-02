@@ -1,0 +1,27 @@
+# Fee schedule, effective-dated (owned by PC 2).
+#
+# STATUS: UNPOPULATED PLACEHOLDER. Rates are deliberately null. The risk engine must
+# refuse to size any trade while any rate is null, and must output NO_TRADE with
+# reason COST_EXCEEDS_EDGE or DATA_INSUFFICIENT. Do not fill these from memory.
+# Confirm each rate against the broker's published charges and the exchange and
+# government notifications in force on the effective date.
+fee_schedule_version: 2026-04-01
+effective_from: 2026-04-01
+status: UNPOPULATED
+verified_by: null
+verified_on: null
+source_references:
+  brokerage: "TODO: broker charges page, captured on verified_on"
+  stt: "TODO: Finance Act / notification reference"
+  exchange_transaction_charge: "TODO: NSE circular reference"
+  sebi_turnover_fee: "TODO: SEBI circular reference"
+  stamp_duty: "TODO: state stamp duty notification"
+  gst: "TODO: CGST/IGST rate reference"
+rates:
+  brokerage_per_order_inr: null
+  brokerage_pct_of_turnover: null
+  stt_intraday_sell_pct: null
+  exchange_transaction_pct: null
+  sebi_turnover_fee_pct: null
+  stamp_duty_buy_pct: null
+  gst_pct_on_brokerage_and_charges: null

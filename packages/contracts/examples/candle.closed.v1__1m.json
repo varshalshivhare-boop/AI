@@ -1,0 +1,20 @@
+{
+  "schema_version": 1,
+  "symbol": "RELIANCE",
+  "exchange": "NSE",
+  "timeframe": "1m",
+  "session_date": "2026-10-19",
+  "bar_start_ts": "2026-10-19T04:45:00Z",
+  "bar_end_ts": "2026-10-19T04:46:00Z",
+  "open": "1411.0000",
+  "high": "1413.2500",
+  "low": "1410.7500",
+  "close": "1412.5000",
+  "volume": 15230,
+  "tick_count": 64,
+  "is_final": true,
+  "is_missing": false,
+  "provider_ts": "2026-10-19T04:45:59.900000Z",
+  "ingest_ts": "2026-10-19T04:46:00.015000Z",
+  "data_mode": "REPLAY"
+}

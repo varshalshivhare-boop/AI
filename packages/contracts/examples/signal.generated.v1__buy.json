@@ -1,0 +1,34 @@
+{
+  "schema_version": 1,
+  "signal_id": "3f2b8c1e-6a4d-4e9b-9c2a-7d1e5f0a9b13",
+  "symbol": "RELIANCE",
+  "exchange": "NSE",
+  "action": "BUY",
+  "price": "1412.5000",
+  "signal_ts": "2026-10-19T05:00:00Z",
+  "expires_at": "2026-10-19T05:30:00Z",
+  "strategy": "BREAKOUT",
+  "timeframe": "5m",
+  "regime": { "trend": "TRENDING_UP", "volatility": "NORMAL", "pressure": "BUYING" },
+  "probability": null,
+  "calibrated": false,
+  "volume_confirmation": "CONFIRMED",
+  "order_flow": { "status": "UNAVAILABLE", "evidence": [] },
+  "structure_explanation": "Close above resistance zone formed by three swing highs; prior zone was cleared on 1.8x relative volume.",
+  "evidence": [
+    { "code": "BREAKOUT_CLOSE_ABOVE_ZONE", "source": "PRICE_ACTION", "description": "5m close above resistance zone upper bound.", "value": 1411.9 },
+    { "code": "RELATIVE_VOLUME_HIGH", "source": "VOLUME", "description": "Relative volume against time-of-day baseline.", "value": 1.8 }
+  ],
+  "invalidation_conditions": [
+    "5m close back below the zone midpoint before the target is reached",
+    "Signal expired after 30 minutes without fill"
+  ],
+  "entry_zone": { "low": "1411.9000", "high": "1413.0000" },
+  "stop_loss": "1408.7500",
+  "targets": ["1418.0000", "1422.5000"],
+  "risk_reward": 1.50,
+  "reason_code": null,
+  "provider_ts": "2026-10-19T05:00:00Z",
+  "ingest_ts": "2026-10-19T05:00:00.210000Z",
+  "data_mode": "REPLAY"
+}

@@ -1,0 +1,7 @@
+apiVersion: 1
+providers:
+  - name: quantmind
+    folder: QuantMind
+    type: file
+    options:
+      path: /var/lib/grafana/dashboards

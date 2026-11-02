@@ -1,0 +1,38 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://quantmind.dev/contracts/provider_health.v1.json",
+  "title": "provider_health.v1",
+  "description": "Market-data provider state transition, published on provider.health. Frozen at v1.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version", "provider", "state", "previous_state", "reason_code",
+    "reconnect_attempt", "provider_ts", "ingest_ts", "data_mode"
+  ],
+  "properties": {
+    "schema_version": { "const": 1 },
+    "provider": { "type": "string", "minLength": 1, "maxLength": 32 },
+    "state": {
+      "enum": ["CONNECTING", "CONNECTED", "DEGRADED", "DISCONNECTED", "ERROR", "STOPPED"]
+    },
+    "previous_state": {
+      "type": ["string", "null"],
+      "enum": ["CONNECTING", "CONNECTED", "DEGRADED", "DISCONNECTED", "ERROR", "STOPPED", null]
+    },
+    "reason_code": {
+      "type": ["string", "null"],
+      "maxLength": 64,
+      "description": "Machine-readable reason, e.g. STALE_DATA, AUTH_FAILED, SOCKET_CLOSED."
+    },
+    "last_tick_provider_ts": { "type": ["string", "null"], "format": "date-time" },
+    "seconds_since_last_tick": { "type": ["number", "null"], "minimum": 0 },
+    "reconnect_attempt": { "type": "integer", "minimum": 0 },
+    "provider_ts": {
+      "type": ["string", "null"],
+      "format": "date-time",
+      "description": "Provider-reported time of the transition, if the provider reports one."
+    },
+    "ingest_ts": { "type": "string", "format": "date-time" },
+    "data_mode": { "enum": ["LIVE", "REPLAY", "DEMO", "HISTORICAL"] }
+  }
+}

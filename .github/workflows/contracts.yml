@@ -1,0 +1,44 @@
+name: contracts-and-fixtures
+on:
+  pull_request:
+  push:
+    branches: [main]
+jobs:
+  validate:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: pip install jsonschema==4.23.0 rfc3339-validator==0.1.4
+      - name: Validate schemas, examples and negative cases
+        run: python3 scripts/validate_schemas.py
+      - name: Fixtures are reproducible
+        run: |
+          cp fixtures/SHA256SUMS /tmp/expected
+          python3 scripts/generate_fixtures.py
+          diff /tmp/expected fixtures/SHA256SUMS
+  migrate:
+    runs-on: ubuntu-24.04
+    services:
+      timescale:
+        image: timescale/timescaledb:2.17.2-pg16
+        env:
+          POSTGRES_USER: quantmind
+          POSTGRES_PASSWORD: ci_only_password
+          POSTGRES_DB: quantmind
+        ports: ["5432:5432"]
+        options: >-
+          --health-cmd "pg_isready -U quantmind -d quantmind"
+          --health-interval 5s --health-retries 20
+    steps:
+      - uses: actions/checkout@v4
+      - name: Apply migrations twice
+        env:
+          PGPASSWORD: ci_only_password
+        run: |
+          sudo apt-get install -y -qq postgresql-client >/dev/null
+          psql -h localhost -U quantmind -d quantmind -v ON_ERROR_STOP=1 -q -f migrations/0001_init.sql
+          psql -h localhost -U quantmind -d quantmind -v ON_ERROR_STOP=1 -q -f migrations/0001_init.sql
+          echo "migration idempotent"

@@ -1,0 +1,52 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://quantmind.dev/contracts/tick.normalized.v1.json",
+  "title": "tick.normalized.v1",
+  "description": "A single market tick after normalization by the market-data service (PC 1). Frozen at v1: incompatible or additive changes require tick.normalized.v2.json.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version", "symbol", "exchange", "price", "quantity",
+    "provider", "provider_ts", "ingest_ts", "data_mode"
+  ],
+  "properties": {
+    "schema_version": { "const": 1 },
+    "symbol": { "type": "string", "minLength": 1, "maxLength": 32 },
+    "exchange": { "enum": ["NSE", "BSE"] },
+    "price": {
+      "type": "string",
+      "pattern": "^[0-9]+(\\.[0-9]{1,4})?$",
+      "description": "Decimal string. Never a JSON number, to avoid float rounding."
+    },
+    "quantity": {
+      "type": "integer",
+      "minimum": 0,
+      "description": "Quantity of the last trade in this tick."
+    },
+    "cumulative_volume": {
+      "type": ["integer", "null"],
+      "minimum": 0,
+      "description": "Provider-reported day volume, if supplied."
+    },
+    "bid_price": { "type": ["string", "null"], "pattern": "^[0-9]+(\\.[0-9]{1,4})?$" },
+    "ask_price": { "type": ["string", "null"], "pattern": "^[0-9]+(\\.[0-9]{1,4})?$" },
+    "bid_quantity": { "type": ["integer", "null"], "minimum": 0 },
+    "ask_quantity": { "type": ["integer", "null"], "minimum": 0 },
+    "provider": { "type": "string", "minLength": 1, "maxLength": 32 },
+    "provider_sequence": {
+      "type": ["integer", "null"],
+      "description": "Provider sequence or message id, used for duplicate detection when present."
+    },
+    "provider_ts": {
+      "type": "string",
+      "format": "date-time",
+      "description": "Time stamped by the provider. Never wall-clock time."
+    },
+    "ingest_ts": {
+      "type": "string",
+      "format": "date-time",
+      "description": "Time this service received the tick."
+    },
+    "data_mode": { "enum": ["LIVE", "REPLAY", "DEMO", "HISTORICAL"] }
+  }
+}

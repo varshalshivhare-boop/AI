@@ -1,0 +1,13 @@
+{
+  "schema_version": 1,
+  "provider": "UPSTOX",
+  "state": "DEGRADED",
+  "previous_state": "CONNECTED",
+  "reason_code": "STALE_DATA",
+  "last_tick_provider_ts": "2026-10-19T04:41:55Z",
+  "seconds_since_last_tick": 17.3,
+  "reconnect_attempt": 0,
+  "provider_ts": null,
+  "ingest_ts": "2026-10-19T04:42:12.600000Z",
+  "data_mode": "LIVE"
+}
